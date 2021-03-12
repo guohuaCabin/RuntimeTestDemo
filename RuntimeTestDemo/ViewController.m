@@ -6,10 +6,27 @@
 //
 
 #import "ViewController.h"
+#import <objc/runtime.h>
 #import "TestClass.h"
 #import "DynamicMethodTest.h"
 #import "MessageForwardTest.h"
-@interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
+#import "NormalMessageForward.h"
+#import "MessageForwardProcess.h"
+#import "MessageForwardProcess2.h"
+typedef NS_ENUM(NSInteger,Status) {
+    Status_startPlay = 1,
+    Status_playing,
+    Status_playEnd,
+    Status_error
+};
+
+typedef struct typeEncode {
+    id   anObject;
+    char *aString;
+    int  anInt;
+} TypeEncode;
+
+@interface ViewController ()<UITableViewDelegate,UITableViewDataSource,TestClassDelegate>
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) NSArray *dataSource;
 @end
@@ -20,7 +37,7 @@
     [super viewDidLoad];
     [self setupViews];
     
-    self.dataSource = @[@"dynamicMethod: resolveInstanceMethod",@"dynamicMethod: resolveClassMethod",@"messageForward: haveMethod",@"messageForward: dynamicMethod",];
+    self.dataSource = @[@"dynamicMethod: resolveInstanceMethod",@"dynamicMethod: resolveClassMethod",@"forwardingTargetForSelector: haveMethod",@"forwardingTargetForSelector: dynamicMethod",@"complete Message Forward",@"message Forward Process 1",@"message Forward Process 2",@"type Encodings",@"class_copyPropertyList",@"class_copyProtocolList",@"protocol_copyPropertyList"];
     [self.tableView reloadData];
     
 }
@@ -38,14 +55,106 @@
 
 
 //消息转发:能找到实例方法
-- (void)messageForward_haveMethod {
+- (void)forwardingTargetForSelector_haveMethod {
     MessageForwardTest *test = [[MessageForwardTest alloc]init];
     [test message];
 }
 //消息转发:找不到实例方法
-- (void)messageForward_dynamicMethod {
+- (void)forwardingTargetForSelector_dynamicMethod {
     MessageForwardTest *test = [[MessageForwardTest alloc]init];
     [test pushMessage];
+}
+
+- (void)completeMessageForward {
+    NormalMessageForward *test = [[NormalMessageForward alloc]init];
+//    [test message];
+    [test pushMessage];
+    
+}
+
+- (void)messageForwardProcess1 {
+    MessageForwardProcess *test = [[MessageForwardProcess alloc]init];
+    [test runMessage];
+    [test pushMessage];
+}
+- (void)messageForwardProcess2 {
+    MessageForwardProcess2 *test = [[MessageForwardProcess2 alloc]init];
+    [test runMessage];
+    [test pushMessage];
+}
+
+//获取类中属性列表
+- (void)class_copyPropertyList {
+    id testClass = objc_getClass("TestClass");
+    unsigned int outCount;
+    //获取属性列表
+    objc_property_t *propertys = class_copyPropertyList(testClass, &outCount);
+    
+    for (int i = 0; i < outCount; i++) {
+        objc_property_t property = propertys[i];
+        //打印属性的名字
+        NSLog(@"%s  \n",property_getAttributes(property));
+    }
+}
+
+//获取该类做遵守的所有协议
+- (void)class_copyProtocolList {
+    unsigned int outCount;
+    //获取协议列表
+    Protocol * __unsafe_unretained  _Nonnull  *protocols = class_copyProtocolList([self class], &outCount);
+    Protocol *delegate = objc_getProtocol("UITableViewDelegate");
+    for (int i = 0; i < outCount; i++) {
+        Protocol *protocol = protocols[i];
+        //打印协议的名字
+        NSLog(@">> %s  \n",protocol_getName(protocol));
+    }
+}
+//获取某个协议遵守的所有的协议
+- (void)protocol_copyPropertyList {
+    unsigned int outCount;
+    //获取协议列表
+    Protocol *delegate = objc_getProtocol("UITableViewDelegate");
+    Protocol * __unsafe_unretained  _Nonnull  *protocols = protocol_copyProtocolList(delegate, &outCount);
+    for (int i = 0; i < outCount; i++) {
+        Protocol *protocol = protocols[i];
+        //打印协议的名字
+        NSLog(@">> %s  \n",protocol_getName(protocol));
+    }
+}
+
+//类型编码
+- (void)typeEncodings {
+    char  *buf1 = @encode(int);
+    NSLog(@">> @encode(int)的类型编码： %s",buf1);
+    
+    char  *buf2 = @encode(int **);
+    NSLog(@">> @encode(int **)的类型编码：%s",buf2);
+    
+    char  *buf3 = @encode(MessageForwardTest *);
+    NSLog(@">> @encode(MessageForwardTest *)的类型编码：%s",buf3);
+    
+    char  *buf3_1 = @encode(MessageForwardTest);
+    NSLog(@">> @encode(MessageForwardTest)的类型编码：%s",buf3_1);
+    
+    char  *buf4 = @encode(NSArray *);
+    NSLog(@">> @encode(NSArray *)的类型编码：%s",buf4);
+    
+    char  *buf5 = @encode(NSDictionary *);
+    NSLog(@">> @encode(NSDictionary *)的类型编码：%s",buf5);
+    
+    char  *buf6 = @encode(NSString *);
+    NSLog(@">> @encode(NSString *)的类型编码：%s",buf6);
+    
+    
+    char  *buf7 = @encode(long double);
+    char  *buf8 = @encode(double);
+    NSLog(@">> @encode(long double)的类型编码：%s ||  >> @encode(double)的类型编码：%s",buf7,buf8);
+    
+    char  *buf9 = @encode(Status);
+    NSLog(@">> @encode(Status)的类型编码：%s",buf9);
+    
+    char  *buf10 = @encode(TypeEncode);
+    NSLog(@">> @encode(TypeEncode)的类型编码：%s",buf10);
 }
 
 
@@ -70,16 +179,27 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     NSString *selStr = self.dataSource[indexPath.row];
-    if ([selStr containsString:@": "]) {
-        selStr = [selStr stringByReplacingOccurrencesOfString:@": " withString:@"_"];
-    }
-    
+    selStr = [self handleLastSelector:selStr];
     SEL sel = NSSelectorFromString(selStr);
     
     if ([self respondsToSelector:sel]) {
         [self performSelector:sel withObject:nil];
     }
 }
+
+- (NSString *)handleLastSelector:(NSString *)selStr {
+    if ([selStr containsString:@": "]) {
+        selStr = [selStr stringByReplacingOccurrencesOfString:@": " withString:@"_"];
+        return selStr;
+    }
+    if ([selStr containsString:@" "]) {
+        selStr = [selStr stringByReplacingOccurrencesOfString:@" " withString:@""];
+        return selStr;
+    }
+    return selStr;
+}
+
+#pragma mark - init
 - (void)setupViews {
     self.tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     self.tableView.delegate = self;

@@ -1,20 +1,22 @@
 //
-//  MessageForwardTest.h
+//  NormalMessageForward.h
 //  RuntimeTestDemo
 //
-//  Created by guohua on 2021/3/10.
+//  Created by guohua on 2021/3/12.
 //
 
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MessageForwardTest : NSObject
+@interface NormalMessageForward : NSObject
 
 - (void)message;
+
 - (void)pushMessage;
 
-+ (void)transfer;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

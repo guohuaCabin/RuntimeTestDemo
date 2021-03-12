@@ -22,4 +22,8 @@
     return [super forwardingTargetForSelector:aSelector];
 }
 
++ (void)transfer {
+    NSLog(@"中转消息");
+}
+
 @end

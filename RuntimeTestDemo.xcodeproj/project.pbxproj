@@ -17,6 +17,9 @@
 		93236E5C25F8785D00F9B5C6 /* TestClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 93236E5B25F8785D00F9B5C6 /* TestClass.m */; };
 		93236E6125F8787000F9B5C6 /* MessageForwardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 93236E6025F8787000F9B5C6 /* MessageForwardTest.m */; };
 		93236E6525F878E100F9B5C6 /* DynamicMethodTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 93236E6425F878E100F9B5C6 /* DynamicMethodTest.m */; };
+		93E1E86325FB08A5003F3585 /* NormalMessageForward.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E1E86225FB08A5003F3585 /* NormalMessageForward.m */; };
+		93E1E86725FB159C003F3585 /* MessageForwardProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E1E86625FB159C003F3585 /* MessageForwardProcess.m */; };
+		93E1E86B25FB1AB6003F3585 /* MessageForwardProcess2.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E1E86A25FB1AB6003F3585 /* MessageForwardProcess2.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +41,12 @@
 		93236E6025F8787000F9B5C6 /* MessageForwardTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageForwardTest.m; sourceTree = "<group>"; };
 		93236E6325F878E100F9B5C6 /* DynamicMethodTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DynamicMethodTest.h; sourceTree = "<group>"; };
 		93236E6425F878E100F9B5C6 /* DynamicMethodTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DynamicMethodTest.m; sourceTree = "<group>"; };
+		93E1E86125FB08A5003F3585 /* NormalMessageForward.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NormalMessageForward.h; sourceTree = "<group>"; };
+		93E1E86225FB08A5003F3585 /* NormalMessageForward.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NormalMessageForward.m; sourceTree = "<group>"; };
+		93E1E86525FB159C003F3585 /* MessageForwardProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageForwardProcess.h; sourceTree = "<group>"; };
+		93E1E86625FB159C003F3585 /* MessageForwardProcess.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageForwardProcess.m; sourceTree = "<group>"; };
+		93E1E86925FB1AB6003F3585 /* MessageForwardProcess2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageForwardProcess2.h; sourceTree = "<group>"; };
+		93E1E86A25FB1AB6003F3585 /* MessageForwardProcess2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageForwardProcess2.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +104,12 @@
 				93236E6025F8787000F9B5C6 /* MessageForwardTest.m */,
 				93236E6325F878E100F9B5C6 /* DynamicMethodTest.h */,
 				93236E6425F878E100F9B5C6 /* DynamicMethodTest.m */,
+				93E1E86125FB08A5003F3585 /* NormalMessageForward.h */,
+				93E1E86225FB08A5003F3585 /* NormalMessageForward.m */,
+				93E1E86525FB159C003F3585 /* MessageForwardProcess.h */,
+				93E1E86625FB159C003F3585 /* MessageForwardProcess.m */,
+				93E1E86925FB1AB6003F3585 /* MessageForwardProcess2.h */,
+				93E1E86A25FB1AB6003F3585 /* MessageForwardProcess2.m */,
 			);
 			path = TestClass;
 			sourceTree = "<group>";
@@ -168,13 +183,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93E1E86B25FB1AB6003F3585 /* MessageForwardProcess2.m in Sources */,
 				93236E5C25F8785D00F9B5C6 /* TestClass.m in Sources */,
 				93236E6125F8787000F9B5C6 /* MessageForwardTest.m in Sources */,
 				93236E4425F8774200F9B5C6 /* ViewController.m in Sources */,
 				93236E6525F878E100F9B5C6 /* DynamicMethodTest.m in Sources */,
+				93E1E86325FB08A5003F3585 /* NormalMessageForward.m in Sources */,
 				93236E3E25F8774200F9B5C6 /* AppDelegate.m in Sources */,
 				93236E4F25F8774500F9B5C6 /* main.m in Sources */,
 				93236E4125F8774200F9B5C6 /* SceneDelegate.m in Sources */,
+				93E1E86725FB159C003F3585 /* MessageForwardProcess.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
