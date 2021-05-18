@@ -13,6 +13,9 @@
 #import "NormalMessageForward.h"
 #import "MessageForwardProcess.h"
 #import "MessageForwardProcess2.h"
+#import "DoesNotRecognizeSelector.h"
+#import "SubTestClass.h"
+#import "NSObject+DynamicAnalysis.h"
 typedef NS_ENUM(NSInteger,Status) {
     Status_startPlay = 1,
     Status_playing,
@@ -36,10 +39,14 @@ typedef struct typeEncode {
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupViews];
-    
-    self.dataSource = @[@"dynamicMethod: resolveInstanceMethod",@"dynamicMethod: resolveClassMethod",@"forwardingTargetForSelector: haveMethod",@"forwardingTargetForSelector: dynamicMethod",@"complete Message Forward",@"message Forward Process 1",@"message Forward Process 2",@"type Encodings",@"class_copyPropertyList",@"class_copyProtocolList",@"protocol_copyPropertyList"];
+    self.dataSource = @[@"dynamicMethod: resolveInstanceMethod",@"dynamicMethod: resolveClassMethod",@"forwardingTargetForSelector: haveMethod",@"forwardingTargetForSelector: dynamicMethod",@"complete Message Forward",@"message Forward Process 1",@"message Forward Process 2",@"doesNotRecognizeSelector",@"type Encodings",@"class_copyPropertyList",@"class_copyProtocolList",@"protocol_copyPropertyList",@"timer_call_classMethod",@"rewriteInstanceMethod_classMethod",@"getProperties",@"getIvars",@"practice"];
     [self.tableView reloadData];
     
+}
+
+- (void)practice {
+    TestClass *test = [[TestClass alloc]init];
+    [test test];
 }
 
 //动态方法解析:实例方法
@@ -80,6 +87,11 @@ typedef struct typeEncode {
 - (void)messageForwardProcess2 {
     MessageForwardProcess2 *test = [[MessageForwardProcess2 alloc]init];
     [test runMessage];
+    [test pushMessage];
+}
+
+- (void)doesNotRecognizeSelector {
+    DoesNotRecognizeSelector *test = [[DoesNotRecognizeSelector alloc]init];
     [test pushMessage];
 }
 
@@ -157,6 +169,34 @@ typedef struct typeEncode {
     NSLog(@">> @encode(TypeEncode)的类型编码：%s",buf10);
 }
 
+//计时器调用类方法
+- (void)timer_call_classMethod {
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerMethod) userInfo:nil repeats:YES];
+    [timer setFireDate:[NSDate distantPast]];
+}
+
+- (void)timerMethod {
+    [TestClass transfer];
+}
+
+- (void)getProperties {
+    NSArray *list = [[TestClass alloc] getPropertiesWithClass:[TestClass class]];
+    NSLog(@"动态获取属性 ：%@",list);
+}
+
+- (void)getIvars {
+    NSArray *list = [[TestClass alloc] getIvarsWithClass:[TestClass class]];
+    NSLog(@"动态获取变量 ：%@",list);
+}
+
+//重写是方法和类方法
+- (void)rewriteInstanceMethod_classMethod {
+    SubTestClass *subTest = [[SubTestClass alloc]init];
+    [subTest instanceMethod];
+    
+    [SubTestClass classMethod];
+}
+#pragma mark - table delegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.dataSource.count;

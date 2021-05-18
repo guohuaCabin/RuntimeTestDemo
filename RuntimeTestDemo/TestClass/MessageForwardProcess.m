@@ -14,7 +14,7 @@
 //        return [NSMethodSignature signatureWithObjCTypes:"v@:"];
 //    }
 //    return [super methodSignatureForSelector:aSelector];
-    return [NSMethodSignature signatureWithObjCTypes:"v@:"];
+    return [NSMethodSignature signatureWithObjCTypes:"v@::"];
 }
 
 -(void)forwardInvocation:(NSInvocation *)anInvocation {

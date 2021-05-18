@@ -28,4 +28,49 @@
     NSLog(@"中转消息");
 }
 
+
+- (void)instanceMethod {
+    NSLog(@"%@类的实例方法",NSStringFromClass([self class]));
+}
++ (void)classMethod {
+    NSLog(@"%@类的类方法",NSStringFromClass(self));
+}
+
+
+- (NSMutableArray*)getPropertiesWithClass:(Class)cls{
+    
+    unsigned int count;// 记录属性个数
+    objc_property_t *properties = class_copyPropertyList(cls, &count);
+    // 遍历
+    NSMutableArray *mArray = [NSMutableArray array];
+    for (int i = 0; i < count; i++) {
+    // objc_property_t 属性类型
+    objc_property_t property = properties[i];
+    // 获取属性的名称 C语言字符串
+    const char *cName = property_getName(property);
+    // 转换为Objective C 字符串
+    NSString *name = [NSString stringWithCString:cName encoding:NSUTF8StringEncoding];
+    [mArray addObject:name];
+    }
+    return mArray.copy;
+}
+
+- (NSMutableArray*)getIvarsWithClass:(Class)cls{
+    
+    unsigned int count;// 记录属性个数
+    Ivar *ivars = class_copyIvarList(cls, &count);
+    // 遍历
+    NSMutableArray *mArray = [NSMutableArray array];
+    for (int i = 0; i < count; i++) {
+    // objc_property_t 属性类型
+    Ivar ivar = ivars[i];
+    // 获取属性的名称 C语言字符串
+    const char *cName = ivar_getName(ivar);
+    // 转换为Objective C 字符串
+    NSString *name = [NSString stringWithCString:cName encoding:NSUTF8StringEncoding];
+    [mArray addObject:name];
+    }
+    return mArray.copy;
+}
+
 @end

@@ -21,6 +21,10 @@
     
 }
 
+- (void)doesNotRecognizeSelector:(SEL)aSelector {
+    NSLog(@"找不到方法");
+}
+
 - (void)pushMessage {
     NSLog(@"执行了pushMessage方法");
 }

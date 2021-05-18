@@ -33,6 +33,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)transfer;
 
+- (void)instanceMethod;
++ (void)classMethod;
+
+- (void)test;
+
+- (NSMutableArray*)getPropertiesWithClass:(Class)cls;
+
+- (NSMutableArray*)getIvarsWithClass:(Class)cls;
+
 @end
 
 NS_ASSUME_NONNULL_END
